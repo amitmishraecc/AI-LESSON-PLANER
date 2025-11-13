@@ -1,0 +1,253 @@
+
+# import os 
+
+# from dotenv import load_dotenv
+# from langchain_groq import ChatGroq
+# from langchain_core.output_parsers import StrOutputParser
+# import streamlit as st
+
+# load_dotenv()
+
+# # --- LLM Setup ---
+# def LLM_Setup(prompt):
+#     model = ChatGroq(
+#         model="llama-3.3-70b-versatile",
+#         groq_api_key=os.getenv('key')
+#     )
+#     parser = StrOutputParser()
+#     output = model | parser
+#     output = output.invoke(prompt)
+#     return output
+
+# # --- Streamlit UI ---
+# st.set_page_config(
+#     page_title="AI Lesson Planner",
+#     layout="wide",
+#     initial_sidebar_state="expanded"
+# )
+
+# st.markdown("<h1 style='text-align: center; color: #4B0082;'>📚 AI Lesson Planner</h1>", unsafe_allow_html=True)
+# st.markdown("<p style='text-align: center; font-size: 16px; color: gray;'>Generate interactive and detailed lesson plans for your students</p>", unsafe_allow_html=True)
+# st.write("---")
+
+# # Input form in a sidebar
+# with st.sidebar:
+#     st.header("Lesson Details")
+#     subject = st.text_input(label='Subject', placeholder="e.g., Science")
+#     topic = st.text_input(label='Topic', placeholder="e.g., The Solar System")
+#     grade = st.text_input(label='Grade', placeholder="e.g., 5")
+#     duration = st.text_input(label='Duration', placeholder="e.g., One hour")
+#     learning_objectives = st.text_area(label='Learning Objectives', placeholder="What should students learn?")
+#     customization = st.text_area(label='Customization', placeholder="Make it fun, interactive, etc.")
+
+# # Generate lesson plan button
+# if st.button('Generate Lesson Plan'):
+#     if not subject or not topic or not grade or not duration or not learning_objectives:
+#         st.warning('⚠️ Please fill out all required fields before generating the lesson plan.')
+#     else:
+#         with st.spinner("🧠 Generating lesson plan..."):
+#             prompt = (
+#                 f"Generate a detailed lesson plan for the subject of {subject} on the topic of {topic}. "
+#                 f"This lesson is intended for {grade} students and will last for {duration}. "
+#                 f"The following are the learning objectives: {learning_objectives}. "
+#                 f"Return the results as Markdown and don't return class size. "
+#                 f"This is how the user wants the plan to be customized: {customization}. return the result as Markdown"
+#             )
+#             llm_output = LLM_Setup(prompt)
+        
+#         st.success("✅ Lesson Plan Generated!")
+#         st.markdown("---")
+
+#         st.markdown(
+#     f"""
+#     <div style="
+#         background-color:#f0f4f8; 
+#         color:#1f2937; 
+#         padding:20px; 
+#         border-radius:10px; 
+#         max-height:500px; 
+#         overflow-y:auto; 
+#         font-size:16px;
+#         line-height:1.5;
+#     ">
+#         {llm_output}
+#     </div>
+#     """,
+#     unsafe_allow_html=True
+# )
+
+####2nd        
+            
+# import os
+# import bcrypt
+# import pymongo
+# # import Loginstreamlit as st
+# import streamlit as st
+
+# from dotenv import load_dotenv
+# from langchain_groq import ChatGroq
+# from langchain_core.output_parsers import StrOutputParser
+
+# # --- Load .env file ---
+# load_dotenv()
+
+# # --- MongoDB Connection ---
+# client = pymongo.MongoClient("mongodb://localhost:27017/")
+# db = client["StudentDB"]
+# users = db["users"]
+
+# # --- LLM Setup ---
+# def LLM_Setup(prompt):
+#     model = ChatGroq(
+#         model="llama-3.3-70b-versatile",
+#         groq_api_key=os.getenv('key')
+#     )
+#     parser = StrOutputParser()
+#     output = model | parser
+#     output = output.invoke(prompt)
+#     return output
+
+# # --- Streamlit Config ---
+# st.set_page_config(page_title="AI Lesson Planner", layout="wide")
+
+# # --- Dark / Light Mode Toggle ---
+# mode = st.sidebar.radio("Theme Mode", ["Light Mode", "Dark Mode"])
+# dark_mode = mode == "Dark Mode"
+
+# # --- Define colors based on mode ---
+# bg_color = "#1f2937" if dark_mode else "#f0f4f8"
+# text_color = "#f0f4f8" if dark_mode else "#1f2937"
+# card_bg_color = "#2c2c2c" if dark_mode else "#ffffff"
+# input_bg_color = "#3a3a3a" if dark_mode else "#ffffff"
+# input_text_color = "#f0f4f8" if dark_mode else "#000000"
+# button_color = "#6a11cb" if dark_mode else "#2575fc"
+# button_text_color = "#ffffff"
+
+# # --- Page Header ---
+# st.markdown(
+#     f"<h1 style='text-align: center; color: {button_color}; font-weight:bold;'>📚 AI Lesson Planner</h1>",
+#     unsafe_allow_html=True
+# )
+
+# # --- Session State for Login ---
+# if "logged_in" not in st.session_state:
+#     st.session_state.logged_in = False
+# if "username" not in st.session_state:
+#     st.session_state.username = None
+
+# # --- Login / Signup Section ---
+# if not st.session_state.logged_in:
+#     choice = st.sidebar.radio("Choose Action", ["Login", "Signup"])
+
+#     if choice == "Signup":
+#         st.subheader("Create New Account")
+#         username = st.text_input("Username")
+#         password = st.text_input("Password", type="password")
+#         if st.button("Create Account"):
+#             if not username or not password:
+#                 st.warning("⚠️ Please fill all fields")
+#             elif users.find_one({"username": username}):
+#                 st.error("⚠️ Username already exists. Try another.")
+#             else:
+#                 hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+#                 users.insert_one({"username": username, "password": hashed})
+#                 st.success("✅ Account created! Please login.")
+
+#     elif choice == "Login":
+#         st.subheader("Login to Continue")
+#         username = st.text_input("Username")
+#         password = st.text_input("Password", type="password")
+#         if st.button("Login"):
+#             user = users.find_one({"username": username})
+#             if user and bcrypt.checkpw(password.encode('utf-8'), user["password"]):
+#                 st.session_state.logged_in = True
+#                 st.session_state.username = username
+#                 st.success(f"✅ Welcome, {username}!")
+#                 st.experimental_rerun = lambda: None
+#             else:
+#                 st.error("❌ Invalid credentials")
+
+# # --- AI Lesson Planner Section (Only if logged in) ---
+# if st.session_state.logged_in:
+#     st.sidebar.success(f"👤 Logged in as {st.session_state.username}")
+#     if st.sidebar.button("Logout"):
+#         st.session_state.logged_in = False
+#         st.session_state.username = None
+#         st.experimental_rerun = lambda: None
+
+#     st.write("---")
+#     st.markdown(
+#         f"<p style='text-align: center; font-size: 16px; color: gray;'>Generate interactive and detailed lesson plans for your students</p>", 
+#         unsafe_allow_html=True
+#     )
+
+#     # Sidebar Inputs
+#     with st.sidebar:
+#         st.header("Lesson Details")
+#         subject = st.text_input('Subject', key="subject")
+#         topic = st.text_input('Topic', key="topic")
+#         grade = st.text_input('Grade', key="grade")
+#         duration = st.text_input('Duration', key="duration")
+#         learning_objectives = st.text_area('Learning Objectives', key="learning_objectives")
+#         customization = st.text_area('Customization', key="customization")
+#         # Initialize variable
+#     llm_output = ""
+
+#     # Generate Lesson Plan
+#     if st.button('🚀 Generate Lesson Plan'):
+#         if not subject or not topic or not grade or not duration or not learning_objectives:
+#             st.warning('⚠️ Please fill out all required fields before generating the lesson plan.')
+#         else:
+#             with st.spinner("🧠 Generating lesson plan..."):
+#                 prompt = (
+#                     f"Generate a detailed lesson plan for the subject of {subject} on the topic of {topic}. "
+#                     f"This lesson is intended for {grade} students and will last for {duration}. "
+#                     f"The following are the learning objectives: {learning_objectives}. "
+#                     f"This is how the user wants the plan to be customized: {customization}. "
+#                     f"Return the results as Markdown."
+#                 )
+#                 llm_output = LLM_Setup(prompt)
+
+#             st.success("✅ Lesson Plan Generated!")
+#             # --- Apply background color based on mode ---
+# st.markdown(
+#     f"""
+#     <style>
+#     .stApp {{
+#         background-color: {bg_color};
+#         color: {text_color};
+#     }}
+#     .css-1d391kg {{
+#         background-color: {card_bg_color};
+#     }}
+#     /* Input and text area background and text color */
+#     .stTextInput>div>div>input,
+#     .stTextArea>div>div>textarea {{
+#         background-color: {input_bg_color};
+#         color: {input_text_color};
+#     }}
+
+#     /* Placeholder color */
+#     .stTextInput>div>div>input::placeholder,
+#     .stTextArea>div>div>textarea::placeholder {{
+#         color: {input_text_color};
+#         opacity: 0.6;
+#     }}
+
+#     /* Buttons */
+#     div.stButton>button {{
+#         background: {button_color};
+#         color: {button_text_color};
+#         font-weight: bold;
+#         border-radius: 8px;
+#     }}
+
+#     div.stButton>button:hover {{
+#         opacity: 0.85;
+#         transform: scale(1.02);
+#         transition: all 0.2s ease;
+#     }}
+#     </style>
+#     """,
+#     unsafe_allow_html=True
+# )
