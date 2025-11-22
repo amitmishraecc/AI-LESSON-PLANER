@@ -82,7 +82,7 @@ except pymongo.errors.OperationFailure as e:
         st.warning("**Common causes:**")
         st.write("1. ❌ **Wrong username or password** - Verify in MongoDB Atlas → Database Access")
         st.write("2. 🔐 **Password needs URL encoding** - If password has special characters (@, #, $, etc.), they need to be encoded")
-        st.write("3. 👤 **User doesn't exist** - Check Database Access in MongoDB Atlas")
+  #     st.write("3. 👤 **User doesn't exist** - Check Database Access in MongoDB Atlas")
         st.info("**How to fix:**\n1. Go to MongoDB Atlas → Database Access\n2. Verify your database user exists\n3. Reset password if needed\n4. If password has special characters, URL encode them:\n   - `@` becomes `%40`\n   - `#` becomes `%23`\n   - `$` becomes `%24`\n   - `%` becomes `%25`")
     else:
         st.error(f"❌ MongoDB operation error: {error_msg}")
