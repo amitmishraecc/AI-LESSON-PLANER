@@ -1559,7 +1559,7 @@ Return the lesson plan in clean Markdown format with proper headings, bullet poi
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2024 AI Lesson Planner. All rights reserved. | Made with ❤️ for educators worldwide</p>
+                <p>© 2024 AI Lesson Planner. All rights reserved. | Made with  for educators worldwide</p>
             </div>
         </div>
         """,
